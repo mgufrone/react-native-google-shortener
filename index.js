@@ -1,6 +1,22 @@
 const axios = require('axios');
 const BASE_URL = 'https://www.googleapis.com/urlshortener/v1/url';
+const baseURL = 'https://www.googleapis.com/urlshortener/v1';
 let GOOGLE_API_KEY = '';
+let clientCallback = undefined;
+
+const createClient = () => {
+  return axios.create({
+    baseURL,
+    timeout: 10 * 1000,
+    params: {
+      key: GOOGLE_API_KEY
+    }
+  });
+}
+
+const setClientCallback = (callback = () => {}) => {
+  clientCallback = callback;
+}
 
 const setKey = (key) => {
   GOOGLE_API_KEY = key;
@@ -15,13 +31,17 @@ const shorten = (longUrl) => {
   if (GOOGLE_API_KEY === '') {
     throw new Error(`please set your google api key via setKey`);
   }
-  return axios.post(`${BASE_URL}?key=${GOOGLE_API_KEY}`, {
+  const client = createClient();
+  if (clientCallback) {
+    clientCallback(client);
+  }
+  return client.post('/url', {
     longUrl
-  })
-  .catch(err => console.log(err));
+  }).then(response => Promise.resolve(clientCallback ? response : response.data));
 }
 module.exports = {
   setKey,
   getKey,
-  shorten
+  shorten,
+  setClientCallback
 }
