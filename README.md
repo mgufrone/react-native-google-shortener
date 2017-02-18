@@ -15,17 +15,28 @@ npm install --save react-native-google-shortener
 The first thing you need to do is set the Google API key. You can obtain to your [Google Developer Console](https://console.developers.google.com).
 
 ```js
-const { setKey, shorten } = require('react-native-google-shortener');
+const { setKey, shorten, expand } = require('react-native-google-shortener');
 
 setKey('your google api key');
 ```
 
+### Shorten URL
 Then, to shorten your long URL, you can use this code.
 ```js
 shorten('https://mgufron.com').then(response => {
   console.log('shorten url', response.id);
   console.log('long url', response.longUrl);
 })
+```
+
+### Expand Shortened URL
+
+```js
+// first argument should shortened url
+expand('https://goo.gl/').then(response => {
+  console.log(response.id);
+  console.log(response.longUrl);
+});
 ```
 
 Full example code would be something like this
@@ -37,6 +48,18 @@ shorten('https://mgufron.com').then(response => {
   console.log('shorten url', response.id);
   console.log('long url', response.longUrl);
 });
+expand('https://goo.gl/alskd').then(response => {
+  console.log(response.id);
+  console.log(response.longUrl);
+  console.log(response.status);
+});
+// include projection or analytics
+expand('https://goo.gl/alkaslk').then(response => {
+  console.log(response.id);
+  console.log(response.longUrl);
+  console.log(response.status);
+  console.log(response.analytics);
+})
 ```
 
 ## Contribution
