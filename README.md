@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mgufrone/react-native-google-shortener.svg?branch=master)](https://travis-ci.org/mgufrone/react-native-google-shortener)
+
 ## Google URL Shortener
 
 This package is supposed to communicate between API of Google URL Shortener to your app.
@@ -38,4 +40,4 @@ shorten('https://mgufron.com').then(response => {
 ```
 
 ## Contribution
-I love feedback so you can put your feedback to Issues or make a pull request to this package. I love to get any comments regarding my work. Happy Coding. 
+I love feedback so you can put your feedback to Issues or make a pull request to this package. I love to get any comments regarding my work. Happy Coding.
