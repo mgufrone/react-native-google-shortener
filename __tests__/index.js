@@ -1,7 +1,22 @@
 const test = require('unit.js');
 const axios = require('axios');
 const MockAdapter = require('axios-mock-adapter');
-const {setKey, getKey, shorten, setClientCallback} = require('./../index');
+const {setKey, getKey, shorten, setClientCallback, expand} = require('./../index');
+
+setClientCallback((instance)=>{
+  const mock = new MockAdapter(instance);
+  mock.onPost('/url').reply(200, {
+    kind: 'alasdjfl',
+    id: 'https://goo.gl/alksjd',
+    longUrl: 'https://mgufron.com',
+  });
+  mock.onGet('/url').reply(200, {
+    kind: 'alasdjfl',
+    id: 'https://goo.gl/alksjd',
+    longUrl: 'https://mgufron.com',
+    status: 'OK'
+  });
+});
 
 describe('unit testing', () => {
   it('should give me empty key', ()=>{
@@ -23,14 +38,6 @@ describe('unit testing', () => {
 
 describe('shortened url', () => {
   // This sets the mock adapter on the default instance
-  setClientCallback((instance)=>{
-    const mock = new MockAdapter(instance);
-    mock.onPost('/url').reply(200, {
-      kind: 'alasdjfl',
-      id: 'https://goo.gl/alksjd',
-      longUrl: 'https://mgufron.com',
-    });
-  })
   it('should give me a proper and valid response', ()=>{
     setKey('allsjdfkljas');
     shorten('https://mgufron.com').then((response) => {
@@ -44,6 +51,26 @@ describe('shortened url', () => {
       test.value(config.params.key).isEqualTo('allsjdfkljas');
       test.value(JSON.parse(config.data).longUrl).isEqualTo('https://mgufron.com');
       test.value(config.method).isEqualTo('post');
+    }).catch(err => console.log(err));
+  });
+});
+
+describe('expand url', () => {
+  // This sets the mock adapter on the default instance
+  it('should give me a proper and valid response', ()=>{
+    setKey('allsjdfkljas');
+    expand('https://goo.gl/alksjd').then((response) => {
+      // console.log(response);
+      const {data, config} = response;
+      test.value(data.hasOwnProperty('kind')).isEqualTo(true);
+      test.value(data.hasOwnProperty('id')).isEqualTo(true);
+      test.value(data.hasOwnProperty('longUrl')).isEqualTo(true);
+      test.value(data.id).isEqualTo('https://goo.gl/alksjd');
+      test.value(data.status).isEqualTo('OK');
+      test.value(data.longUrl).isEqualTo("https://mgufron.com");
+      test.value(config.params.key).isEqualTo('allsjdfkljas');
+      test.value(config.params.shortUrl).isEqualTo('https://goo.gl/alksjd');
+      test.value(config.method).isEqualTo('get');
     }).catch(err => console.log(err));
   });
 });

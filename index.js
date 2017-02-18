@@ -9,7 +9,7 @@ const createClient = () => {
     baseURL,
     timeout: 10 * 1000,
     params: {
-      key: GOOGLE_API_KEY
+      key: getKey()
     }
   });
 }
@@ -23,14 +23,17 @@ const setKey = (key) => {
 }
 
 const getKey = () => GOOGLE_API_KEY;
+const checkClientKey = () => {
+  if (getKey() === '') {
+    throw new Error(`please set your google api key via setKey`);
+  }
+}
 
 const shorten = (longUrl) => {
   if (!longUrl || longUrl === '') {
     throw new Error(`first argument could not be empty`);
   }
-  if (GOOGLE_API_KEY === '') {
-    throw new Error(`please set your google api key via setKey`);
-  }
+  checkClientKey();
   const client = createClient();
   if (clientCallback) {
     clientCallback(client);
@@ -39,9 +42,24 @@ const shorten = (longUrl) => {
     longUrl
   }).then(response => Promise.resolve(clientCallback ? response : response.data));
 }
+
+const expand = (shortUrl, projection = false) => {
+  if (!shortUrl || shortUrl === '') {
+    throw new Error(`first argument could not be empty`);
+  }
+  checkClientKey();
+  const client = createClient();
+  if (clientCallback) {
+    clientCallback(client);
+  }
+  return client.get('/url', {
+    params: Object.assign({ shortUrl }, projection ? {projection: 'FULL'} : {})
+  }).then(response => Promise.resolve(clientCallback ? response : response.data));
+};
 module.exports = {
   setKey,
   getKey,
+  expand,
   shorten,
   setClientCallback
 }
