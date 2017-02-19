@@ -63,4 +63,6 @@ expand('https://goo.gl/alkaslk').then(response => {
 ```
 
 ## Contribution
-I love feedback so you can put your feedback to Issues or make a pull request to this package. I love to get any comments regarding my work. Happy Coding.
+I love feedback so you can put your feedback to Issues or make a pull request to this package. I love to get any comments regarding my work. Or you can click donate button below. Happy Coding.
+
+[![](https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=UCLBQU8PV7C3C)
